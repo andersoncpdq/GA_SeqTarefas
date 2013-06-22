@@ -292,23 +292,17 @@ public class Ga {
     
     public Gene competeGene( Gene gene1, Gene gene2 ){
     	int total = gene1.aptidao + gene2.aptidao;
-    	float razao = (float)0.9;//1 - gene1.aptidao/total;
+    	//float razao = (float)0.9; //Forma gulosa, o melhor gene tem 90 de chance de ir para proximo geracao
     	
-    	Gene melhor, pior;
-    	if( gene1.aptidao < gene2.aptidao ){
-    		melhor = gene1;
-    		pior = gene2;
-    	} else {
-    		melhor = gene2;
-    		pior = gene1;
-    	}
-    	
-    	//float razao2 = gene2.aptidao/total;
+    	//System.out.println("gene1.aptidao: " + gene1.aptidao + " gene2.aptidao: " + gene2.aptidao );
+    	float razao = (float)1 - (float)gene1.aptidao/total; //Forma nao gulosa, o chance do gene ir para a 
+    														 // proxima geraCao depende de quao bom ele eh em relacao
+    														 // ao gene que compete com ele.
+    	//System.out.println("razao: " + razao);
     
     	float r = rand.nextFloat();
-    	
-    	Gene vencedor = r < razao ? melhor : pior;
-    	
+    	//System.out.println("rand: " + r);
+    	Gene vencedor = r < razao ? gene1 : gene2;
     	return vencedor;
     }
     
@@ -364,7 +358,7 @@ public class Ga {
     		 * segundo a formula da distancia entre dois pontos.
     		 *   
     		 */
-    		File f = new File("abz5.txt");
+    		File f = new File("Car5.txt");
     		FileReader fr = new FileReader(f);
     		BufferedReader buffer = new BufferedReader(fr);
     		
@@ -390,11 +384,12 @@ public class Ga {
     	    //Calcula a matrix de custos de acordo com o arquivo.
     	    i = 0;
     		while( i < J ){
-    			line = buffer.readLine().trim();
+    			line = buffer.readLine().trim().replace("  ", " ");
     			vetorStr = line.split(" ");
+    			System.out.println(line);
     			for (int k = 0; k < vetorStr.length; ) {
     				indice = Integer.parseInt(vetorStr[k]);
-    				k++;
+    				k++; 
 					custos[indice][i] = Integer.parseInt(vetorStr[k]);
 					k++;
 				}
