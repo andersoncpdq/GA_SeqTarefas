@@ -82,7 +82,7 @@ public class Ga {
                 r = rand.nextInt(tamanhoDaPopulacao);
             indice2 = r;
             
-            Gene g[] = calculaPontoDeCorte(gene[indice1], gene[indice2]);
+            Gene g[] = gene[indice1].calculaPontoDeCorte(gene[indice2], custos);
             filhos[i++] = g[0];
             filhos[i++] = g[1];
         }
@@ -96,7 +96,7 @@ public class Ga {
     /* Resposavel pelo processamento do ponto de corte.
      * O range do corte eh escolhido aleatoreamente.
      */
-    public Gene[] calculaPontoDeCorte(Gene pai1, Gene pai2) {
+    /*public Gene[] calculaPontoDeCorte(Gene pai1, Gene pai2) {
     	
         int tamanhoDoGene = custos.length;
         Gene filhos[] = new Gene[2];
@@ -120,7 +120,7 @@ public class Ga {
         balanceiaGene(filhos[0]);
         balanceiaGene(filhos[1]);
         return filhos;
-    }
+    }*/
     
     /*
      * O ponto de corte pode causar desbalanceamento dos genes, por exemplo:
@@ -132,7 +132,7 @@ public class Ga {
      * Para o filho gerado acima, uma possibilidade de balanceamento seria:
      * [5,1,2,4,3,0]
      */
-    public void balanceiaGene(Gene g) {
+    /*public void balanceiaGene(Gene g) {
     	
     	//System.out.println( "\nGene no balanceamento: " );
     	int i, j = 0;
@@ -183,7 +183,7 @@ public class Ga {
                 }
             }
         }
-    }
+    }*/
     
     public void imprimeGenes(Gene [] g) {
         for (int i = 0; i < g.length; i++) {
@@ -296,7 +296,7 @@ public class Ga {
     		 * segundo a formula da distancia entre dois pontos.
     		 *   
     		 */
-    		File f = new File("abz5.txt");
+    		File f = new File("teste_small.txt");
     		FileReader fr = new FileReader(f);
     		BufferedReader buffer = new BufferedReader(fr);
     		
