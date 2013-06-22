@@ -51,16 +51,10 @@ public class Ga {
     }*/
     
     /* A reproducao eh feita por corte,
-     * O algoritmo escolhe dois indices aleatoreos da populacao atual e cruza-os 
-     * Existe a possibilidade de, apos o cruzamento, a mesma cidade aparecer no gene duas vezes. Para esse caso, existe um
-     * tratamento que verifica as cidades que não existem no vetor solução e substitui, aleatoreamente, uma das cidades
-     * repetidas por uma cidade que não existe naquela solução. 
-     *
-     * Exemplo: suponhamos o cruzamento dos genes com as cidades [1, 4, 3, 5, 2, 6] e [4, 3, 5, 1, 6, 2] com corte na 3a casa.
-     * Teremos como resultado os genes: [1, 4, 3, 1, 6, 2] e [4, 3, 5, 5, 2, 6] e que não são soluções viáveis para o 
-     * problema do caixeiro viajante. O 1o gene resultante, por exemplo, não passa pela cidade 5 e passa 2 vezes pela cidade 2.
-     * O tratamento desse caso colocaria a cidade 5 aleatoreamente em uma das posições repetidas pela cidade 1.
-     * O resultado tratado para o primeiro gene resultando seria: [5, 4, 3, 1, 6, 2] ou [1, 4, 3, 5, 6, 2].
+     * O algoritmo escolhe dois indices aleatoreos da populacao atual e cruza-os. Existe a possibilidade de,
+     * apos o cruzamento, o mesmo Job aparecer no gene duas vezes. Para esse caso, existe um tratamento que 
+     * verifica os Jobs que não existem no vetor solução e substitui, aleatoreamente, um dos Jobs repetidos 
+     * por um Job que não existe naquela solução.
      *
      */
     public void reproducao() {
@@ -91,107 +85,6 @@ public class Ga {
         
         for (int j = 0; j < filho.length; j++)
         	filho[j].calculaAptidao(custos, melhorGene);
-    }
-    
-    /* Resposavel pelo processamento do ponto de corte.
-     * O range do corte eh escolhido aleatoreamente.
-     */
-    /*public Gene[] calculaPontoDeCorte(Gene pai1, Gene pai2) {
-    	
-        int tamanhoDoGene = custos.length;
-        Gene filhos[] = new Gene[2];
-        
-        for (int i = 0; i < filhos.length; i++)
-			filhos[i] = new Gene(numJobs, numMachs);
-        
-        int pontoDeCorte = rand.nextInt( tamanhoDoGene );
-        					//rand.nextInt( tamanhoDoGene/2 ) + tamanhoDoGene/4;
-        
-        for (int i = 0; i < pai1.array.length; i++) {
-            if( i < pontoDeCorte ){
-                filhos[0].array[i] = pai1.array[i];
-                filhos[1].array[i] = pai2.array[i];
-            } else {
-                filhos[0].array[i] = pai2.array[i];
-                filhos[1].array[i] = pai1.array[i]; 
-            }
-        }
-        
-        balanceiaGene(filhos[0]);
-        balanceiaGene(filhos[1]);
-        return filhos;
-    }*/
-    
-    /*
-     * O ponto de corte pode causar desbalanceamento dos genes, por exemplo:
-     * 
-     * O gene [0,1,2,3,4,5] cruzado com o gene [5,4,3,2,1,0] com ponto de corte na 3a casa daria como resultado o filho:
-     * [0,1,2,2,1,0 ]
-     * que obiviamente nao eh uma solucao valida. Esse metodo escolhe uma das cidades repetidas aleateroeamente e a 
-     * substitui por uma das cidades que nao esta presente no conjunto solucao. 
-     * Para o filho gerado acima, uma possibilidade de balanceamento seria:
-     * [5,1,2,4,3,0]
-     */
-    /*public void balanceiaGene(Gene g) {
-    	
-    	//System.out.println( "\nGene no balanceamento: " );
-    	int i, j = 0;
-    	for ( i = 0; i < g.array.length; i++) {
-    		//System.out.print(  g.array[i] +" " );
-		}
-        int cidadesRepetidas[] = new int[g.array.length];
-
-        int indiceCidadesRepetidas[][] = new int[g.array.length][2];
-        for ( i = 0; i < indiceCidadesRepetidas.length; i++) {
-            for ( j = 0; j < indiceCidadesRepetidas[0].length; j++) {
-                indiceCidadesRepetidas[i][j] = -1;
-            }
-        }
-        
-        int indice2, valorOposto;
-        for ( i = 0; i < g.array.length; i++) {
-            cidadesRepetidas[ g.array[i] ] ++;
-            indice2 = indiceCidadesRepetidas[ g.array[i] ][0] == -1 ? 0 : 1;
-            indiceCidadesRepetidas[ g.array[i] ][indice2] = i;
-            if( cidadesRepetidas[ g.array[i] ] > 3 ) 
-                throw new Error("Erro no balanceiaGene: cromossomo g.array["+g.array[i]+"] com mais de duas cidades repetidas ");
-        }
-
-        for ( i = 0; i < cidadesRepetidas.length; i++) {
-            if( cidadesRepetidas[i] == 2  || cidadesRepetidas[i] == 0 ){
-                int indicePrincipal, indiceSecundario;
-  
-                for ( j = i+1 ; j < cidadesRepetidas.length; j++) {
-                    if( cidadesRepetidas[i] == 2 ){
-                    	valorOposto = 0;
-                        indicePrincipal = i;
-                        indiceSecundario = j;
-                    }else{
-                    	valorOposto = 2;
-                        indicePrincipal = j;
-                        indiceSecundario = i;
-                    }
-                    if( cidadesRepetidas[j] == valorOposto ){
-                        cidadesRepetidas[indicePrincipal]--;
-                        cidadesRepetidas[indiceSecundario]++;
-                        indice2 = rand.nextBoolean() ? indiceCidadesRepetidas[indicePrincipal][0] : indiceCidadesRepetidas[indicePrincipal][1];
-                        //System.out.println( "Indice Secundario = " + indiceSecundario );
-                        g.array[ indice2 ] = indiceSecundario;
-                        //System.out.println( "g.array[ "+ indice2 +" ] = " + indiceSecundario );
-                        break;
-                    }
-                }
-            }
-        }
-    }*/
-    
-    public void imprimeGenes(Gene [] g) {
-        for (int i = 0; i < g.length; i++) {
-            for (int j = 0; j < g[i].array.length; j++) {
-                System.out.print( g[i].array[j] + " " );
-            }
-            System.out.println( " Aptidao:  " + gene[i].aptidao );
-        }
     }
     
     /*Eh escolhido aleatoriamente um filho para disputar com um pai, o vencendor vai para a proxima geracao*/
@@ -274,6 +167,15 @@ public class Ga {
 		}
     }
     
+    public void imprimeGenes(Gene [] g) {
+        for (int i = 0; i < g.length; i++) {
+            for (int j = 0; j < g[i].array.length; j++) {
+                System.out.print( g[i].array[j] + " " );
+            }
+            System.out.println( " Aptidao:  " + gene[i].aptidao );
+        }
+    }
+    
     static void printMatriz(int [][] custos) {
     	
     	for (int i = 0; i < custos.length; i++) {
@@ -290,12 +192,7 @@ public class Ga {
     public static void main(String[] args) {
         
     	try{
-    		/* O arquivo de teste para o problema do caixeiro viajante filho da mae que eu achei na internet não 
-    		 * dá as distancias entre as cidades, mas sim as coordenadas de cada cidade no plano cartesiano. 
-    		 * Tive que fazer um processamento extra para calcular a distancia entre todas as cidades 
-    		 * segundo a formula da distancia entre dois pontos.
-    		 *   
-    		 */
+    		
     		File f = new File("teste_small.txt");
     		FileReader fr = new FileReader(f);
     		BufferedReader buffer = new BufferedReader(fr);

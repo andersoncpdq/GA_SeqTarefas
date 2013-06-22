@@ -74,6 +74,9 @@ public class Gene {
         }
     }
     
+    /* Resposavel pelo processamento do ponto de corte.
+     * O range do corte eh escolhido aleatoreamente.
+     */
 	public Gene[] calculaPontoDeCorte(Gene pai2, int [][] custos) {
 	    	
         int tamanhoDoGene = custos.length;
@@ -100,6 +103,15 @@ public class Gene {
         return filhos;
     }
 	
+	/*
+     * O ponto de corte pode causar desbalanceamento dos genes, por exemplo:
+     * 
+     * O gene [0,1,2,3,4,5] cruzado com o gene [5,4,3,2,1,0] com ponto de corte na 3a casa daria como resultado o filho:
+     * [0,1,2,2,1,0 ], que obviamente nao eh uma solucao valida. Esse metodo escolhe um dos Jobs repetidos aleatoreamente
+     * e a substitui por um dos Jobs que nao esta presente no conjunto solucao.
+     *  
+     * Para o filho gerado acima, uma possibilidade de balanceamento seria: [5,1,2,4,3,0]
+     */
 	public void balanceiaGene() {
     	
     	//System.out.println( "\nGene no balanceamento: " );
