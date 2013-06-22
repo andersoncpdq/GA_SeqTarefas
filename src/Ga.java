@@ -1,137 +1,50 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.Random;
 
-
-/* O algoritmo genético  a seguir foi implementado para a resolução do problema do caixaiero viajante da seguinte maneira:
- * Um gene é um vetor de n posições que contém a sequencia de cidades a ser percorrida. Por exemplo, o gene com vetor
- * [1, 4, 3, 6, 5, 2] significa que o cálculo da aptdão eh feito da seguinte forma: 
- * AptidãoDoGene = dist(1, 4)+ dist(4, 3) + dist(3, 6) + dist(6, 5) + dist(5, 2) + dist(2, 1). Esse
- *
- * Obs: eu implementei esse algoritmo inteiro em cerca de 2 dias, alguns trechos podem estar, digamos, não muito otimizados... 
- * Não me julguem =D
- */
-public class Ga {    
-    int tamanhoDaPopulacao = 100; //Deve ser par.
-    int taxaMutacao = 7; //taxa de mutação em percentagem, deve estar entre 0 e 99. 
-    
-    /*Custo de viagem da cidade i a cidade j */
-    public static int custos[][];    
-    int aptidaoTotal = 0;
-    
-    Random rand = new Random();
-    public Gene gene[];
-    public Gene filho[];
-    Gene melhorGene;
+public class Ga {
+	
+    int tamanhoDaPopulacao = 100;
+    int taxaMutacao = 7; //taxa de mutação em percentagem, deve estar entre 0 e 99.
     int numJobs;
     int numMachs;
+    int aptidaoTotal = 0;
     
-    public Ga( int matrizCustos[][] ) {
+    static int custos[][];
+    Random rand = new Random();
+    
+    Gene gene[];
+    Gene filho[];
+    Gene melhorGene;
+    
+    public Ga(int matrizCustos[][]) {
+    	
     	custos = matrizCustos;
     	numJobs = custos[0].length;
     	numMachs = custos.length;
     	
-    	melhorGene = new Gene(numJobs);
+    	melhorGene = new Gene(numJobs, numMachs);
     	melhorGene.aptidao = Integer.MAX_VALUE;
     	
         gene = new Gene[tamanhoDaPopulacao];
         filho = new Gene[tamanhoDaPopulacao];
+        
         for (int i = 0; i < tamanhoDaPopulacao; i++) {
-            gene[i] = new Gene(numJobs);
-            filho[i] = new Gene(numJobs);
+            gene[i] = new Gene(numJobs, numMachs);
+            filho[i] = new Gene(numJobs, numMachs);
         }
     }
     
-    public void inicializa(){
+    public void inicializa() {
+    	
         for (int i = 0; i < gene.length; i++) {
-            preencheGeneAleatoriamente( gene[i] );
-            calculaAptidao(gene[i]);
+        	gene[i].preencheGeneAleatoriamente();
+        	gene[i].calculaAptidao(custos, melhorGene);
         }
     }
     
-    public void calculaAptidao(Gene g){
-    	
-    	int result[] = new int[numMachs];
-    	
-    	for (int i = 0; i < numMachs; ++i) result[i] = 0;
-
-    	for (int k = 0; k < numJobs; ++k){
-    		int j = g.array[k];
-    		result[0] = result[0] + custos[0][j];
-    		for (int i = 1; i < numMachs; ++i){
-    			if( result[i] > result[i-1] ){
-    				result[i] = result[i] + custos[i][j];
-    			} else {
-    				result[i] = result[i-1] + custos[i][j];
-    			}
-    		}
-    	}
-    	
-    	g.aptidao = result[numMachs-1];
-    	
-    	if( g.aptidao < melhorGene.aptidao ){
-        	for (int i = 0; i < g.array.length; i++) {
-				melhorGene.array[i] = g.array[i];
-			}
-        	melhorGene.aptidao = g.aptidao;
-        	System.out.println( " Teste Melhor gene: " + melhorGene.aptidao );
-        }
-    }
-    
-    /*public void calculaAptidao( Gene g ){
-    	g.aptidao = 0;
-        for (int i = 1; i < g.array.length; i++) {
-            int indiceAnterior = i-1;
-            g.aptidao += Ga.custos[ g.array[indiceAnterior] ] [ g.array[i] ];
-        }
-        g.aptidao += Ga.custos[ g.array[g.array.length-1] ][ g.array[0] ];
-        aptidaoTotal += g.aptidao;
-        if( g.aptidao < melhorGene.aptidao ){
-        	for (int i = 0; i < g.array.length; i++) {
-				melhorGene.array[i] = g.array[i];
-			}
-        	melhorGene.aptidao = g.aptidao;
-        	System.out.println( " Test Melhor gene: " + melhorGene.aptidao );
-        }
-    }*/
-    
-    /*Preenche cada solucao aleatoriamente*/
-    private void preencheGeneAleatoriamente( Gene g ){
-        int k = g.array.length-1; //coloca n-1 elementos no array.
-        int i = rand.nextInt( g.array.length );
-        while( k > 0 ) {
-            if( g.array[i] == 0 ){
-                g.array[i] = k--;
-                i = rand.nextInt( g.array.length );
-            } else {
-                i = (i < g.array.length-1) ? ++i : 0 ;
-            }
-        }        
-    }
-    
-    public void imprimeGene(Gene g){
-    	System.out.println();
-        for (int i = 0; i < g.array.length; i++) {
-            System.out.print( g.array[i] + " " );
-        }
-        System.out.println( " Aptidao:  " + g.aptidao );
-    }
-
-    public void imprimeGenes( Gene [] g ){
-        for (int i = 0; i < g.length; i++) {
-            for (int j = 0; j < g[i].array.length; j++) {
-                System.out.print( g[i].array[j] + " " );
-            }
-            System.out.println( " Aptidao:  " + gene[i].aptidao );
-        }
-    }
-    
- /*   private void preparaRoleta(){
+    /* private void preparaRoleta(){
         for (int i = 0; i < gene.length; i++) {
             gene[i].roletaPercent = gene[i].aptidao/aptidaoTotal;
         }
@@ -150,14 +63,19 @@ public class Ga {
      * O resultado tratado para o primeiro gene resultando seria: [5, 4, 3, 1, 6, 2] ou [1, 4, 3, 5, 6, 2].
      *
      */
-    public void reproducao(){
+    public void reproducao() {
+    	
         Gene filhos[] = new Gene[tamanhoDaPopulacao];
-//        int tamanhoDoGene = custos.length;
-//        preparaRoleta();
+        //int tamanhoDoGene = custos.length;
+        //preparaRoleta();
         int r, indice1, indice2;
         int i = 0;
-        if( tamanhoDaPopulacao%2 == 1 ) throw new Error( "A variavel tamanhoDaPopulacao deve ser par!" );
-        while( i < tamanhoDaPopulacao ){
+        
+        if(tamanhoDaPopulacao%2 == 1 ) 
+        	throw new Error( "A variavel tamanhoDaPopulacao deve ser par!");
+        
+        while( i < tamanhoDaPopulacao ) {
+        	
             r = rand.nextInt(tamanhoDaPopulacao);
             indice1 = r;
             while( r == indice1 )
@@ -168,23 +86,27 @@ public class Ga {
             filhos[i++] = g[0];
             filhos[i++] = g[1];
         }
+        
         filho = filhos;
-        for (int j = 0; j < filho.length; j++) {
-			calculaAptidao( filho[j] );
-		}
+        
+        for (int j = 0; j < filho.length; j++)
+        	filho[j].calculaAptidao(custos, melhorGene);
     }
     
     /* Resposavel pelo processamento do ponto de corte.
      * O range do corte eh escolhido aleatoreamente.
      */
-    public Gene[] calculaPontoDeCorte( Gene pai1, Gene pai2 ){
+    public Gene[] calculaPontoDeCorte(Gene pai1, Gene pai2) {
+    	
         int tamanhoDoGene = custos.length;
         Gene filhos[] = new Gene[2];
-        for (int i = 0; i < filhos.length; i++) {
-			filhos[i] = new Gene(numJobs);
-		}
+        
+        for (int i = 0; i < filhos.length; i++)
+			filhos[i] = new Gene(numJobs, numMachs);
+        
         int pontoDeCorte = rand.nextInt( tamanhoDoGene );
-        					//rand.nextInt( tamanhoDoGene/2 ) + tamanhoDoGene/4  ;
+        					//rand.nextInt( tamanhoDoGene/2 ) + tamanhoDoGene/4;
+        
         for (int i = 0; i < pai1.array.length; i++) {
             if( i < pontoDeCorte ){
                 filhos[0].array[i] = pai1.array[i];
@@ -194,6 +116,7 @@ public class Ga {
                 filhos[1].array[i] = pai1.array[i]; 
             }
         }
+        
         balanceiaGene(filhos[0]);
         balanceiaGene(filhos[1]);
         return filhos;
@@ -209,7 +132,8 @@ public class Ga {
      * Para o filho gerado acima, uma possibilidade de balanceamento seria:
      * [5,1,2,4,3,0]
      */
-    public void balanceiaGene( Gene g ){
+    public void balanceiaGene(Gene g) {
+    	
     	//System.out.println( "\nGene no balanceamento: " );
     	int i, j = 0;
     	for ( i = 0; i < g.array.length; i++) {
@@ -261,8 +185,18 @@ public class Ga {
         }
     }
     
+    public void imprimeGenes(Gene [] g) {
+        for (int i = 0; i < g.length; i++) {
+            for (int j = 0; j < g[i].array.length; j++) {
+                System.out.print( g[i].array[j] + " " );
+            }
+            System.out.println( " Aptidao:  " + gene[i].aptidao );
+        }
+    }
+    
     /*Eh escolhido aleatoriamente um filho para disputar com um pai, o vencendor vai para a proxima geracao*/
-    public void selecao(){
+    public void selecao() {
+    	
     	if( filho.length != gene.length ) throw new Error( "Tamanho dos genes pai e filho são diferentes... my bad!" );
     	Gene novaGeracao[] =  new Gene[tamanhoDaPopulacao];
     	int j, indiceNovaGeracao = 0;
@@ -285,13 +219,15 @@ public class Ga {
 		}
     	
     	gene = novaGeracao;
-    	for (int i = 0; i < gene.length; i++) {
-    		calculaAptidao(gene[i]);
-		}
+    	
+    	for (int i = 0; i < gene.length; i++)
+    		gene[i].calculaAptidao(custos, melhorGene);
     }
     
-    public Gene competeGene( Gene gene1, Gene gene2 ){
-    	int total = gene1.aptidao + gene2.aptidao;
+    public Gene competeGene(Gene gene1, Gene gene2) {
+    	int total = 0;
+    	
+    	total = gene1.aptidao + gene2.aptidao;
     	float razao = (float)0.9;//1 - gene1.aptidao/total;
     	
     	Gene melhor, pior;
@@ -312,7 +248,8 @@ public class Ga {
     	return vencedor;
     }
     
-    public void obtemIndiceAleatorio( boolean vetorDeIndices[] ){
+    public void obtemIndiceAleatorio(boolean vetorDeIndices[]) {
+    	
     	int i = rand.nextInt(vetorDeIndices.length);
     	int indiceAnterior = i;
     	do{
@@ -328,7 +265,8 @@ public class Ga {
     
     // A mutação ocorre com probabilidade igual a que estiver presente na variavel "taxaMutacao" e, caso o gene selecionado
     // seja escolhido para ser mutado, dois índices desse gene são trocados aleatoreamente.
-    public void mutacao(){
+    public void mutacao() {
+    	
     	int indiceRand1, indiceRand2, swap;
     	for (int i = 0; i < gene.length; i++) {
 			if( rand.nextInt(100) < taxaMutacao ){
@@ -337,12 +275,14 @@ public class Ga {
 				swap = gene[i].array[ indiceRand1 ];
 				gene[i].array[ indiceRand1 ] = gene[i].array[ indiceRand2 ];
 				gene[i].array[ indiceRand2 ] = swap;
-				calculaAptidao( gene[i] );
+				
+				gene[i].calculaAptidao(custos, melhorGene);
 			}
 		}
     }
     
     static void printMatriz(int [][] custos) {
+    	
     	for (int i = 0; i < custos.length; i++) {
 			for (int j = 0; j < custos[0].length; j++) {
 				System.out.print(custos[i][j] + " ");
@@ -356,7 +296,6 @@ public class Ga {
      */
     public static void main(String[] args) {
         
-    	
     	try{
     		/* O arquivo de teste para o problema do caixeiro viajante filho da mae que eu achei na internet não 
     		 * dá as distancias entre as cidades, mas sim as coordenadas de cada cidade no plano cartesiano. 
