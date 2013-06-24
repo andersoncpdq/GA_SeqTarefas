@@ -206,7 +206,7 @@ public class Ga {
         
     	try{
     		
-    		File f = new File("rec37.txt");
+    		File f = new File("rec25.txt");
     		FileReader fr = new FileReader(f);
     		BufferedReader buffer = new BufferedReader(fr);
     		
@@ -221,7 +221,7 @@ public class Ga {
 
     		String [] vetorStr;
     		//A primeira linha do arquivo contem 2 inteiros, o numero de Jobs J e o numero de Maquimas M
-    		line = buffer.readLine();
+    		line = buffer.readLine().trim().replace("   ", " ").replace("  ", " ");
     		vetorStr = line.split(" ");
     		
     		J = Integer.parseInt(vetorStr[0]);
