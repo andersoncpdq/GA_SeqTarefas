@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Ga {
 	
-    int tamanhoDaPopulacao = 100;
+    int tamanhoDaPopulacao = 1000;
     int taxaMutacao = 7; //taxa de mutação em percentagem, deve estar entre 0 e 99.
     int numJobs;
     int numMachs;
@@ -118,19 +118,32 @@ public class Ga {
     }
     
     public Gene competeGene( Gene gene1, Gene gene2 ) {
-    	
+    	Gene vencedor;
     	int total = gene1.aptidao + gene2.aptidao;
-    	//float razao = (float)0.9; //Forma gulosa, o melhor gene tem 90 de chance de ir para proximo geracao    	
-    	//System.out.println("gene1.aptidao: " + gene1.aptidao + " gene2.aptidao: " + gene2.aptidao );
-    	
-    	float razao = (float)1 - (float)gene1.aptidao/total; //Forma nao gulosa, a chance do gene ir para a 
-    														 // proxima geracao depende de quao bom ele eh em
-    														 // relacao ao gene que compete com ele.
-    	//System.out.println("razao: " + razao);
-    
     	float r = rand.nextFloat();
+    	///*
+    	float razao = (float)1 - (float)gene1.aptidao/total; //Forma nao gulosa, a chance do gene ir para a 
+		 													  // proxima geracao depende de quao bom ele eh em
+    	vencedor = r < razao ? gene1 : gene2; 
+    	//*/
+    	
+    	/*
+    	float razao = (float)0.9; //Forma gulosa, o melhor gene tem 90 de chance de ir para proximo geracao    	
+    	//System.out.println("gene1.aptidao: " + gene1.aptidao + " gene2.aptidao: " + gene2.aptidao );
+    	Gene melhor, pior;
+    	 	if( gene1.aptidao < gene2.aptidao ){
+    	 		melhor = gene1;
+    	 		pior = gene2;
+    	 	} else {
+    	 		melhor = gene2;
+    	 		pior = gene1;
+    	  	}
+    	vencedor = r < razao ? melhor : pior;
+    	// relacao ao gene que compete com ele.
+    	//System.out.println("razao: " + razao);
+    	
     	//System.out.println("rand: " + r);
-    	Gene vencedor = r < razao ? gene1 : gene2;
+    	*/
     	return vencedor;
     }
     
@@ -193,7 +206,7 @@ public class Ga {
         
     	try{
     		
-    		File f = new File("teste_small.txt");
+    		File f = new File("Hel11.txt");
     		FileReader fr = new FileReader(f);
     		BufferedReader buffer = new BufferedReader(fr);
     		
