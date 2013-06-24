@@ -121,13 +121,13 @@ public class Ga {
     	Gene vencedor;
     	int total = gene1.aptidao + gene2.aptidao;
     	float r = rand.nextFloat();
-    	///*
+    	/*
     	float razao = (float)1 - (float)gene1.aptidao/total; //Forma nao gulosa, a chance do gene ir para a 
 		 													  // proxima geracao depende de quao bom ele eh em
     	vencedor = r < razao ? gene1 : gene2; 
     	//*/
     	
-    	/*
+    	///*
     	float razao = (float)0.9; //Forma gulosa, o melhor gene tem 90 de chance de ir para proximo geracao    	
     	//System.out.println("gene1.aptidao: " + gene1.aptidao + " gene2.aptidao: " + gene2.aptidao );
     	Gene melhor, pior;
@@ -143,7 +143,7 @@ public class Ga {
     	//System.out.println("razao: " + razao);
     	
     	//System.out.println("rand: " + r);
-    	*/
+    	//*/
     	return vencedor;
     }
     
@@ -206,7 +206,7 @@ public class Ga {
         
     	try{
     		
-    		File f = new File("Hel11.txt");
+    		File f = new File("rec37.txt");
     		FileReader fr = new FileReader(f);
     		BufferedReader buffer = new BufferedReader(fr);
     		
@@ -232,7 +232,7 @@ public class Ga {
     	    //Calcula a matrix de custos de acordo com o arquivo.
     	    i = 0;
     		while( i < J ){
-    			line = buffer.readLine().trim().replace("  ", " ");
+    			line = buffer.readLine().trim().replace("   ", " ").replace("  ", " ");
     			vetorStr = line.split(" ");
     			System.out.println(line);
     			for (int k = 0; k < vetorStr.length; ) {
@@ -272,7 +272,7 @@ public class Ga {
         	long tempFinal = System.currentTimeMillis();     	  
         	long dif = (tempFinal - tempInicial); 
         	System.out.println();
-        	System.out.println(String.format("Tempo de execussão: %02d segundos  e %02d milisegundos", dif/1000, dif%1000));
+        	System.out.println(String.format("Tempo de execussï¿½o: %02d segundos  e %02d milisegundos", dif/1000, dif%1000));
         	
     	} catch(Exception e){
     		e.printStackTrace();
