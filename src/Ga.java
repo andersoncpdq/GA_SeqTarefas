@@ -236,6 +236,8 @@ public class Ga {
     		buffer.close();
     		fr.close();
     		
+    		long tempInicial = System.currentTimeMillis(); 
+    		
     		Ga ga = new Ga( custos );
             ga.inicializa();
             i = 0;
@@ -253,7 +255,12 @@ public class Ga {
             for ( i = 0; i < ga.melhorGene.array.length; i++) {
     			System.out.print(ga.melhorGene.array[i] + " " );
     		}
-    		
+
+        	long tempFinal = System.currentTimeMillis();     	  
+        	long dif = (tempFinal - tempInicial); 
+        	System.out.println();
+        	System.out.println(String.format("Tempo de execussão: %02d segundos  e %02d milisegundos", dif/1000, dif%1000));
+        	
     	} catch(Exception e){
     		e.printStackTrace();
     	}
